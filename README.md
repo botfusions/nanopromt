@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Botfusions NaNo Prompt Galerisi
 
-## Getting Started
+[Nano Banana Pro Prompts](https://youmind.com/tr-TR/nano-banana-pro-prompts) sayfasının modern replikası. Neo-Brutalist tasarım ve Next.js 15+ ile geliştirildi.
 
-First, run the development server:
+![Status](https://img.shields.io/badge/Prompts-87-brightgreen)
+![Next.js](https://img.shields.io/badge/Next.js-15+-black)
+![Tailwind](https://img.shields.io/badge/Tailwind-CSS-blue)
+
+## ✨ Özellikler
+
+| Özellik | Açıklama |
+|---------|----------|
+| 🔍 **Gerçek Zamanlı Arama** | Başlık, içerik ve yazar bazlı filtreleme |
+| ❤️ **Favoriler** | LocalStorage ile kalıcı favori listesi |
+| 🏷️ **Kategori Filtreleme** | Profil/Avatar, Poster, Sosyal Medya vb. |
+| 🎨 **Neo-Brutalist UI** | Keskin kenarlar, kalın gölgeler, canlı renkler |
+| 📋 **Tek Tıkla Kopyala** | Prompt'u anında panoya kopyala |
+| ⭐ **Öne Çıkan Etiketleri** | Featured prompt'lar için görsel işaretleme |
+
+## 🚀 Hızlı Başlangıç
 
 ```bash
+# Bağımlılıkları yükle
+npm install
+
+# Geliştirme sunucusunu başlat
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Tarayıcıda aç
+http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📁 Proje Yapısı
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+botfusions-banana/
+├── app/                    # Next.js App Router
+│   ├── page.tsx           # Ana sayfa
+│   ├── layout.tsx         # Root layout
+│   └── globals.css        # Global stiller
+├── components/            # UI Bileşenleri
+│   ├── Header.tsx         # Üst banner
+│   ├── PromptCard.tsx     # Prompt kartı
+│   ├── PromptGrid.tsx     # Kart grid'i
+│   ├── SearchBar.tsx      # Arama çubuğu
+│   └── CategoryFilter.tsx # Kategori filtreleri
+├── src/data/
+│   └── prompts.ts         # 87 prompt verisi
+└── scripts/
+    └── extract-prompts.js # Veri çıkarma scripti
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Teknik Stack
 
-## Learn More
+- **Framework:** Next.js 15+ (App Router)
+- **Styling:** Tailwind CSS + CSS Variables
+- **Icons:** Lucide React
+- **Veri:** Cheerio ile HTML parsing
+- **Storage:** LocalStorage (favoriler için)
 
-To learn more about Next.js, take a look at the following resources:
+## 📊 Mevcut Durum
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- ✅ **87 prompt** başarıyla çıkarıldı ve entegre edildi
+- ✅ YouMind ile birebir UI replikasyonu
+- ✅ Arama, filtreleme ve favoriler tam fonksiyonel
+- ⏳ Hedef: 1960+ prompt (YouMind API erişimi gerekiyor)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔧 Veri Çıkarma
 
-## Deploy on Vercel
+```bash
+# BotNANo.txt'den prompt çıkar
+node scripts/extract-prompts.js
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📝 Lisans
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT License - Bu proje eğitim amaçlıdır.
