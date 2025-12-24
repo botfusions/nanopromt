@@ -7,14 +7,15 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env.local' });
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Service role key for bypassing RLS
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
+if (!supabaseUrl || !supabaseServiceKey) {
     console.error("❌ Missing Supabase credentials in .env.local");
     process.exit(1);
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function migrate() {
     const jsonPath = path.join(process.cwd(), 'src/data/all_prompts.json');
@@ -26,11 +27,24 @@ async function migrate() {
 
         console.log(`📊 Found ${prompts.length} prompts to migrate.`);
 
+        // Helper to parse prompt_original which is a JSON string
+        const getPromptFromOriginal = (p: any): string => {
+            if (p.prompt_original && typeof p.prompt_original === 'string') {
+                try {
+                    const parsed = JSON.parse(p.prompt_original);
+                    return parsed.prompt || "";
+                } catch {
+                    return "";
+                }
+            }
+            return p.prompt_original?.prompt || "";
+        };
+
         // Map JSON fields to DB Schema
         const formattedData = prompts.map((p: any) => ({
             id: p.id,
             title: p.title || "Untitled",
-            prompt: p.prompt_en || p.prompt || "",
+            prompt: p.prompt_en || p.prompt || getPromptFromOriginal(p) || p.prompt_cn || p.title || "",
             summary: p.summary || "",
             categories: p.tags || [],
             author: p.original_source?.name || "Unknown",

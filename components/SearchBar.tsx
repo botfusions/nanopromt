@@ -14,7 +14,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
                 <Search className="w-5 h-5 text-black mr-2 flex-shrink-0" />
                 <input
                     type="text"
-                    placeholder="Prompt/başlık ara..."
+                    placeholder="Prompt, başlık veya #00001 ara..."
                     className="w-full bg-transparent outline-none font-medium placeholder:text-gray-400 text-sm"
                     onChange={(e) => onSearch(e.target.value)}
                 />
