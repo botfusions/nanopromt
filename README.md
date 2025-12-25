@@ -95,7 +95,7 @@ http://localhost:3000
 └── scripts/               # Yardımcı scriptler
 ```
 
-## 📋 Son Güncelleme (25 Aralık 2024)
+## 📋 Son Güncelleme (25 Aralık 2025)
 
 ### 🛡️ Güvenlik
 - SSRF koruması (URL whitelist)
