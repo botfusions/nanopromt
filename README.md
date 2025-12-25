@@ -1,11 +1,21 @@
-# Botfusions NaNo Prompt Galerisi
+# BotsNANO Prompt Galerisi
 
-[Nano Banana Pro Prompts](https://youmind.com/tr-TR/nano-banana-pro-prompts) sayfasının modern replikası. Neo-Brutalist tasarım ve Next.js 15+ ile geliştirildi.
+<div align="center">
 
-![Status](https://img.shields.io/badge/Prompts-2930-brightgreen)
-![Next.js](https://img.shields.io/badge/Next.js-15+-black)
-![Tailwind](https://img.shields.io/badge/Tailwind-CSS-blue)
-![Supabase](https://img.shields.io/badge/Supabase-Database-green)
+![BotsNANO](https://img.shields.io/badge/BotsNANO-Prompt%20Ar%C5%9Fivi-26C6FF?style=for-the-badge)
+
+**Gemini Nano Banana Pro için en iyi prompt koleksiyonu**
+
+[![Prompts](https://img.shields.io/badge/Prompts-2801+-brightgreen?style=flat-square)](/)
+[![Next.js](https://img.shields.io/badge/Next.js-15+-black?style=flat-square)](https://nextjs.org)
+[![Tailwind](https://img.shields.io/badge/Tailwind-CSS-38bdf8?style=flat-square)](https://tailwindcss.com)
+[![Supabase](https://img.shields.io/badge/Supabase-Database-3ecf8e?style=flat-square)](https://supabase.com)
+
+[Demo](https://nanoprompt.botfusions.com) • [Raporla](https://github.com/botfusions/nanopromt/issues) • [İletişim](mailto:info@botfusions.com)
+
+</div>
+
+---
 
 ## ✨ Özellikler
 
@@ -19,7 +29,7 @@
 | ⭐ **Öne Çıkan Etiketleri** | Featured prompt'lar için görsel işaretleme |
 | 🔐 **Supabase Auth** | Google OAuth ile kullanıcı girişi |
 | 📤 **Prompt Gönderimi** | Kullanıcılar kendi promptlarını ekleyebilir |
-| 🖼️ **3 Katmanlı Sıralama** | Resim+Prompt → Resim+Başlık → Resimsiz |
+| 🖼️ **Akıllı Sıralama** | En yeni en üstte + resim kalitesine göre |
 
 ## 🚀 Hızlı Başlangıç
 
@@ -38,103 +48,88 @@ npm run dev
 http://localhost:3000
 ```
 
-## 📁 Proje Yapısı
-
-```
-botfusions-banana/
-├── app/                    # Next.js App Router
-│   ├── page.tsx           # Ana sayfa (Server Component)
-│   ├── HomeClient.tsx     # Client-side ana sayfa
-│   ├── layout.tsx         # Root layout
-│   ├── login/             # Giriş sayfası
-│   ├── auth/callback/     # OAuth callback
-│   └── api/image-proxy/   # Görsel proxy API
-├── components/            # UI Bileşenleri
-│   ├── Header.tsx         # Üst banner (BETA etiketi)
-│   ├── PromptCard.tsx     # Prompt kartı (tab sistemi)
-│   ├── PromptGrid.tsx     # Kart grid'i
-│   ├── SearchBar.tsx      # Arama çubuğu
-│   ├── CategoryFilter.tsx # Kategori filtreleri
-│   ├── AuthButton.tsx     # Google OAuth butonu
-│   └── AddPromptSection.tsx # Prompt ekleme alanı
-├── contexts/
-│   └── AuthContext.tsx    # Firebase Auth context
-├── src/
-│   ├── data/
-│   │   ├── prompts.ts     # 2930 prompt (Supabase'den)
-│   │   ├── all_prompts.json # Orijinal JSON verisi
-│   │   └── schema.sql     # Veritabanı şeması
-│   └── lib/
-│       ├── supabase.ts    # Supabase client
-│       └── firebase.ts    # Firebase config
-└── scripts/
-    ├── migrate_prompts.ts # JSON → Supabase migrasyon
-    └── extract_prompts.js # Veri çıkarma scripti
-```
-
 ## 🛠️ Teknik Stack
 
-- **Framework:** Next.js 15+ (App Router)
-- **Database:** Supabase (PostgreSQL)
-- **Auth:** Supabase Auth (Google OAuth)
-- **Styling:** Tailwind CSS + CSS Variables
-- **Icons:** Lucide React
-- **Storage:** LocalStorage (favoriler için)
+| Teknoloji | Açıklama |
+|-----------|----------|
+| **Next.js 15+** | App Router, Server Components |
+| **Supabase** | PostgreSQL + Auth + Realtime |
+| **Tailwind CSS** | Utility-first styling |
+| **Lucide React** | İkon kütüphanesi |
+| **TypeScript** | Tip güvenliği |
+
+## 🛡️ Güvenlik
+
+| Koruma | Durum |
+|--------|-------|
+| ✅ **SSRF Koruması** | Image proxy URL whitelist |
+| ✅ **Open Redirect** | Redirect path validation |
+| ✅ **Security Headers** | X-Frame-Options, CSP, HSTS |
+| ✅ **Rate Limiting** | API istekleri için limit |
+| ✅ **Route Protection** | Middleware ile auth kontrolü |
 
 ## 📊 Mevcut Durum
 
-- ✅ **2801 prompt** (Filtrelenmiş ve gösterime hazır)
+- ✅ **2801+ prompt** (Filtrelenmiş ve gösterime hazır)
 - ✅ **700+ aktif görselli prompt**
-- ✅ **Görselleştirme Süreci:** Resimsiz promptlar için otomatik AI görsel üretimi başladı
 - ✅ Neo-Brutalist UI replikasyonu
 - ✅ Arama, filtreleme ve favoriler tam fonksiyonel
 - ✅ Google OAuth entegrasyonu
-- ✅ 3 katmanlı sıralama (Resim+Prompt > Resim+Başlık > Resimsiz)
+- ✅ Akıllı sıralama (En yeni + Resim kalitesi)
 - ✅ Kart numaraları ile arama (#00123)
 
-## 🔧 Migrasyon
+## 📁 Proje Yapısı
 
-```bash
-# Supabase service role key gerekli
-$env:SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
-npx tsx scripts/migrate_prompts.ts
+```
+├── app/                    # Next.js App Router
+│   ├── api/image-proxy/   # Güvenli görsel proxy
+│   ├── auth/callback/     # OAuth callback
+│   └── login/             # Giriş sayfası
+├── components/            # UI Bileşenleri
+│   ├── Header.tsx         # Hero + Sticky Note
+│   ├── Footer.tsx         # FAQ + CTA + Email
+│   ├── PromptCard.tsx     # Kopyalama özellikli kart
+│   └── AddPromptSection.tsx # Prompt ekleme formu
+├── middleware.ts          # Rate limiting + Auth
+├── src/data/              # Prompt verileri
+└── scripts/               # Yardımcı scriptler
 ```
 
-## 📋 Son Değişiklikler (25 Aralık 2024)
+## 📋 Son Güncelleme (25 Aralık 2024)
 
-### 🤖 AI Görsel Üretim Süreci
-- **Model:** Gemini-3-Pro-Image (Antigravity AI Engine)
-- **Akış:** Resimsiz promptlar 5'erli gruplar halinde analiz ediliyor ve yüksek kaliteli görseller üretiliyor.
-- **Depolama:** Üretilen görseller `/public/images/` altında yerelleştiriliyor.
-- **Otomasyon:** `scripts/get_next_batch.js` ve `scripts/update_prompt_image.js` ile süreç yönetiliyor.
+### 🛡️ Güvenlik
+- SSRF koruması (URL whitelist)
+- Open Redirect koruması
+- Security headers (CSP, X-Frame-Options)
+- Rate limiting (100 istek/dakika)
+- Middleware ile route protection
 
-### 🎨 UI/UX Güncellemeleri
-- **Hero Bölümü:** Pembe arka plan → Gök Mavisi (#26C6FF) olarak değiştirildi
-- **Footer Bölümü:** YouMind tarzı FAQ accordion ve CTA bölümü eklendi
-  - Mor arka planlı SSS (Sıkça Sosulan Sorular) bölümü
-  - Cyan arka planlı "HAZIR MISINIZ" CTA bölümü
-  - Siyah copyright footer
+### 🎨 UI/UX
+- Hero bölümüne sarı sticky note eklendi
+- Footer'a e-posta adresi eklendi
+- Kopyala butonu düzeltildi
+- Yeni promptlar en üstte görünüyor
 
-### 📊 Veri Güncellemeleri
-- **CSV Export:** `scripts/export_prompts_to_csv.js` scripti eklendi
-  - 989 resimli prompt CSV formatında export edilebilir
-  - Excel ve Google Sheets uyumlu UTF-8 BOM desteği
-- **#02196 Kartı:** Eksik görsel eklendi
+### 🧹 Temizlik
+- ~9MB gereksiz dosya silindi
+- 45+ debug script kaldırıldı
+- Kod optimizasyonu yapıldı
 
-### 🔧 Teknik Düzeltmeler
-- CSS renk değişkenleri düzeltildi (`@theme` + `:root` + utility sınıfları)
-- `brand-cyan` ve `brand-purple` renkleri eklendi
-- Footer bileşeni (`components/Footer.tsx`) oluşturuldu
+## 📧 İletişim
 
-### 📁 Yeni Dosyalar
-- `components/Footer.tsx` - FAQ ve CTA footer bileşeni
-- `scripts/export_prompts_to_csv.js` - CSV export scripti
-- `scripts/get_next_batch.js` - Toplu görsel üretimi için batch yöneticisi
-- `scripts/update_prompt_image.js` - JSON veri kaynağı görsel güncelleyici
-- `scripts/analyze_prompts.js` - Veri seti analiz ve eksik görsel raporlama
-- `exports/prompts_with_images.csv` - Resimli promptların CSV dosyası
-- `public/images/youmind_extract_*.png` - Yeni üretilen AI görselleri
+**E-posta:** info@botfusions.com
 
 ## 📝 Lisans
 
 MIT License - Bu proje eğitim amaçlıdır.
+
+---
+
+<div align="center">
+
+**[⬆ Başa Dön](#botsnano-prompt-galerisi)**
+
+Made with ❤️ by [BotFusions](https://botfusions.com)
+
+</div>
+
