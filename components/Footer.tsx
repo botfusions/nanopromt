@@ -95,6 +95,13 @@ export function Footer() {
             {/* Copyright */}
             <section className="bg-brand-black py-4 px-4">
                 <div className="container mx-auto text-center">
+                    {/* AI Disclaimer */}
+                    <p className="text-yellow-400/90 text-xs mb-3 flex items-center justify-center gap-2">
+                        <span>⚠️</span>
+                        <span>
+                            Promptlar her zaman görseldeki sonucu vermeyebilir. AI yanılabilir, lütfen sonuçları kontrol edin.
+                        </span>
+                    </p>
                     <p className="text-white/60 text-sm">
                         © 2024 BotsNANO. Tüm hakları saklıdır.
                     </p>

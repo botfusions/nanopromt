@@ -44,14 +44,17 @@ export default function HomeClient({ initialPrompts }: HomeClientProps) {
     const filteredPrompts = initialPrompts.filter((p, index) => {
         // Get the English tag for filtering
         const englishTag = CATEGORY_MAP[activeCategory] || "";
-        const cardNumber = `#${String(index + 1).padStart(5, '0')}`;
+        const cardNumber = `#${String(p.displayNumber || index + 1).padStart(5, '0')}`;
 
         // Check if searching by card number (e.g., #00002 or #2)
         const searchLower = searchQuery.toLowerCase();
+        const searchNum = searchQuery.replace('#', '').replace(/^0+/, ''); // Leading zeros kaldır
+        const cardNum = String(p.displayNumber || index + 1);
+
         const matchesCardNumber = searchQuery.startsWith('#') && (
             cardNumber === searchQuery ||
-            cardNumber.endsWith(searchQuery.replace('#', '')) ||
-            String(index + 1) === searchQuery.replace('#', '')
+            cardNumber.includes(searchQuery.replace('#', '')) ||
+            cardNum === searchNum
         );
 
         const matchesCategory = activeCategory === "Tümü" || p.categories?.some(cat => cat.toLowerCase() === englishTag.toLowerCase());

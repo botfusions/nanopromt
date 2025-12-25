@@ -45,6 +45,24 @@ export function Header() {
                     İlham veren en iyi prompt koleksiyonu
                 </p>
             </div>
+
+            {/* Sarı Yapışkan Kağıt - Sticky Note */}
+            <div className="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 z-20 hidden md:block">
+                <div className="bg-yellow-200 w-48 p-4 shadow-lg transform rotate-3 hover:rotate-0 transition-transform duration-300"
+                    style={{
+                        boxShadow: '3px 3px 10px rgba(0,0,0,0.3)',
+                        background: 'linear-gradient(135deg, #fef08a 0%, #fde047 100%)'
+                    }}>
+                    {/* Tape effect */}
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-6 bg-yellow-100/80 opacity-70"></div>
+
+                    <p className="text-amber-800 font-handwriting text-sm leading-relaxed" style={{ fontFamily: 'cursive' }}>
+                        📌 Promptlar<br />
+                        <span className="font-bold">Gemini Nano Banana Pro</span><br />
+                        içindir
+                    </p>
+                </div>
+            </div>
         </header>
     );
 }

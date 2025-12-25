@@ -83,8 +83,9 @@ botfusions-banana/
 
 ## 📊 Mevcut Durum
 
-- ✅ **2930 prompt** Supabase veritabanında
-- ✅ **789 görselli prompt** (ilk sırada gösteriliyor)
+- ✅ **2801 prompt** (Filtrelenmiş ve gösterime hazır)
+- ✅ **700+ aktif görselli prompt**
+- ✅ **Görselleştirme Süreci:** Resimsiz promptlar için otomatik AI görsel üretimi başladı
 - ✅ Neo-Brutalist UI replikasyonu
 - ✅ Arama, filtreleme ve favoriler tam fonksiyonel
 - ✅ Google OAuth entegrasyonu
@@ -101,10 +102,16 @@ npx tsx scripts/migrate_prompts.ts
 
 ## 📋 Son Değişiklikler (25 Aralık 2024)
 
+### 🤖 AI Görsel Üretim Süreci
+- **Model:** Gemini-3-Pro-Image (Antigravity AI Engine)
+- **Akış:** Resimsiz promptlar 5'erli gruplar halinde analiz ediliyor ve yüksek kaliteli görseller üretiliyor.
+- **Depolama:** Üretilen görseller `/public/images/` altında yerelleştiriliyor.
+- **Otomasyon:** `scripts/get_next_batch.js` ve `scripts/update_prompt_image.js` ile süreç yönetiliyor.
+
 ### 🎨 UI/UX Güncellemeleri
 - **Hero Bölümü:** Pembe arka plan → Gök Mavisi (#26C6FF) olarak değiştirildi
 - **Footer Bölümü:** YouMind tarzı FAQ accordion ve CTA bölümü eklendi
-  - Mor arka planlı SSS (Sıkça Sorulan Sorular) bölümü
+  - Mor arka planlı SSS (Sıkça Sosulan Sorular) bölümü
   - Cyan arka planlı "HAZIR MISINIZ" CTA bölümü
   - Siyah copyright footer
 
@@ -122,8 +129,11 @@ npx tsx scripts/migrate_prompts.ts
 ### 📁 Yeni Dosyalar
 - `components/Footer.tsx` - FAQ ve CTA footer bileşeni
 - `scripts/export_prompts_to_csv.js` - CSV export scripti
+- `scripts/get_next_batch.js` - Toplu görsel üretimi için batch yöneticisi
+- `scripts/update_prompt_image.js` - JSON veri kaynağı görsel güncelleyici
+- `scripts/analyze_prompts.js` - Veri seti analiz ve eksik görsel raporlama
 - `exports/prompts_with_images.csv` - Resimli promptların CSV dosyası
-- `public/images/prompt_02196.jpg` - Eksik kart görseli
+- `public/images/youmind_extract_*.png` - Yeni üretilen AI görselleri
 
 ## 📝 Lisans
 

@@ -100,12 +100,21 @@ export async function getAllPrompts(): Promise<Prompt[]> {
     };
   });
 
-  // 3 katmanlı sıralama:
-  // 1. Resim + Gerçek Prompt (en üst)
-  // 2. Resim + Başlık (prompt = title)
-  // 3. Resimsiz (en alt)
+  // Sıralama: En yeni en üstte, sonra resim kalitesine göre
+  // 1. Önce tarihe göre sırala (en yeni en üstte)
+  // 2. Aynı gündeki promptlar için: Resim + Prompt > Resim + Başlık > Resimsiz
   promptsWithNumber.sort((a, b) => {
-    // Önce kategorileri belirle
+    // Önce tarihe göre sırala (en yeni en üstte)
+    const dateA = new Date(a.date || '1970-01-01').getTime();
+    const dateB = new Date(b.date || '1970-01-01').getTime();
+
+    // Tarih farkı 1 günden fazlaysa tarihe göre sırala
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    if (Math.abs(dateA - dateB) > oneDayMs) {
+      return dateB - dateA; // En yeni en üstte
+    }
+
+    // Aynı gün içindeyse resim kalitesine göre sırala
     const getCategory = (p: typeof a) => {
       if (p.hasWorkingImage && p.prompt && p.prompt !== p.title) return 1; // Resim + Gerçek Prompt
       if (p.hasWorkingImage) return 2; // Resim + Başlık

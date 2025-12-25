@@ -125,9 +125,26 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
 
                 {/* Action Buttons */}
                 <div className="mt-auto flex gap-3 h-12">
-                    <button className="flex-grow flex items-center justify-center gap-2 bg-brand-black border-2 border-brand-black text-white hover:bg-white hover:text-brand-black font-black uppercase tracking-wider transition-all shadow-none hover:shadow-neo active:translate-y-[1px] active:shadow-none rounded-none text-sm group/btn">
-                        <Zap className="w-4 h-4 group-hover/btn:fill-current transition-colors" />
-                        <span>ŞİMDİ DENE</span>
+                    <button
+                        onClick={handleCopy}
+                        className={cn(
+                            "flex-grow flex items-center justify-center gap-2 border-2 border-brand-black font-black uppercase tracking-wider transition-all shadow-none hover:shadow-neo active:translate-y-[1px] active:shadow-none rounded-none text-sm group/btn",
+                            copied
+                                ? "bg-green-500 text-white"
+                                : "bg-brand-black text-white hover:bg-white hover:text-brand-black"
+                        )}
+                    >
+                        {copied ? (
+                            <>
+                                <Check className="w-4 h-4" />
+                                <span>KOPYALANDI!</span>
+                            </>
+                        ) : (
+                            <>
+                                <Copy className="w-4 h-4" />
+                                <span>KOPYALA</span>
+                            </>
+                        )}
                     </button>
 
                     <button className="w-12 flex items-center justify-center bg-white border-2 border-brand-black hover:bg-gray-100 transition-all shadow-none hover:shadow-neo active:translate-y-[1px] active:shadow-none rounded-none" title="Paylaş">

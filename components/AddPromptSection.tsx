@@ -38,30 +38,42 @@ export function AddPromptSection() {
                 }
             }
 
+            const insertData = {
+                id: crypto.randomUUID(),
+                title,
+                prompt,
+                images: imageUrl ? [imageUrl] : [],
+                categories: [],
+                author: authorName,
+                date: new Date().toISOString(),
+                model: 'Nano banana pro',
+                featured: false,
+            };
+
+            console.log("Inserting data:", insertData);
+
             const { data: insertedData, error: insertError } = await supabase
-                .from("banana_prompts") // Tek tablo - artık banana_prompts kullanılıyor
-                .insert({
-                    id: crypto.randomUUID(), // Benzersiz ID oluştur
-                    user_id: user.uid,
-                    title,
-                    prompt,
-                    images: imageUrl ? [imageUrl] : [], // images array formatında
-                    categories: [],
-                    author: authorName, // Twitter'dan veya profilden gelen isim
-                    date: new Date().toISOString(),
-                    source: 'user', // Kullanıcı promptu olarak işaretle
-                    approved: true, // Hemen görünsün - onay gerekmiyor
-                })
+                .from("banana_prompts")
+                .insert(insertData)
                 .select('id')
                 .single();
 
             if (insertError) {
-                console.error("Insert error:", insertError.message, insertError.code, insertError.details);
-                throw insertError;
+                console.error("Insert error details:", {
+                    message: insertError.message,
+                    code: insertError.code,
+                    details: insertError.details,
+                    hint: insertError.hint
+                });
+                throw new Error(insertError.message || "Veritabanı hatası");
             }
 
-            // Format card number as #00001
-            const cardNumber = `#${String(insertedData.id).padStart(5, '0')}`;
+            // Toplam kayıt sayısını al ve kart numarası olarak göster
+            const { count } = await supabase
+                .from("banana_prompts")
+                .select('*', { count: 'exact', head: true });
+
+            const cardNumber = `#${String(count || 1).padStart(5, '0')}`;
             setSavedCardNumber(cardNumber);
             setSuccess(true);
             setTitle("");
@@ -69,11 +81,14 @@ export function AddPromptSection() {
             setImageUrl("");
             setTwitterUrl("");
 
+            // 8 saniye sonra kapat ve sayfayı yenile
             setTimeout(() => {
                 setSuccess(false);
                 setSavedCardNumber(null);
                 setIsOpen(false);
-            }, 4000);
+                // Sayfayı yenile - yeni prompt görünsün
+                router.refresh();
+            }, 8000);
         } catch (err) {
             console.error("Submit error:", err);
             setError(err instanceof Error ? err.message : "Gönderme başarısız");
