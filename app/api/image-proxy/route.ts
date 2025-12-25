@@ -1,10 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Güvenilir görsel kaynakları whitelist
+const ALLOWED_DOMAINS = [
+    'raw.githubusercontent.com',
+    'cms-assets.youmind.com',
+    'pbs.twimg.com',
+    'abs.twimg.com',
+    'placehold.co',
+    'images.unsplash.com',
+    'i.imgur.com',
+];
+
+function isAllowedUrl(urlString: string): boolean {
+    try {
+        const url = new URL(urlString);
+        // Sadece HTTPS izin ver
+        if (url.protocol !== 'https:') return false;
+        // Domain whitelist kontrolü
+        return ALLOWED_DOMAINS.some(domain =>
+            url.hostname === domain || url.hostname.endsWith('.' + domain)
+        );
+    } catch {
+        return false;
+    }
+}
+
 export async function GET(request: NextRequest) {
     const url = request.nextUrl.searchParams.get('url');
 
     if (!url) {
         return new NextResponse('Missing url parameter', { status: 400 });
+    }
+
+    // SSRF koruması - sadece whitelist'teki domainler
+    if (!isAllowedUrl(url)) {
+        return new NextResponse('Domain not allowed', { status: 403 });
     }
 
     try {
@@ -41,7 +71,7 @@ export async function GET(request: NextRequest) {
                 'Cache-Control': 'public, max-age=31536000',
             },
         });
-    } catch (error) {
+    } catch {
         // Return placeholder on error
         const placeholderSvg = `
       <svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
@@ -57,3 +87,4 @@ export async function GET(request: NextRequest) {
         });
     }
 }
+

@@ -105,6 +105,12 @@ export function Footer() {
                     <p className="text-white/60 text-sm">
                         © 2024 BotsNANO. Tüm hakları saklıdır.
                     </p>
+                    <a
+                        href="mailto:info@botfusions.com"
+                        className="text-white/80 text-sm hover:text-brand-yellow transition-colors mt-2 inline-block"
+                    >
+                        📧 info@botfusions.com
+                    </a>
                 </div>
             </section>
         </footer>
