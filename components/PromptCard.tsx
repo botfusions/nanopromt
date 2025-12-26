@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { Prompt } from "@/src/data/prompts";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/AuthContext";
+import { GhostSignupModal } from "./GhostSignupModal";
 
 interface PromptCardProps {
     prompt: Prompt;
@@ -23,13 +25,21 @@ interface PromptCardProps {
 
 
 export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardProps) {
+    const { user } = useAuth();
     const [activeTab, setActiveTab] = useState<"prompt" | "original">("prompt");
     const [copied, setCopied] = useState(false);
+    const [showGhostModal, setShowGhostModal] = useState(false);
+
     // Sabit numara - sıralama değişse bile aynı kalır
     const cardNumber = `#${String(prompt.displayNumber || 0).padStart(5, '0')}`;
 
 
     const handleCopy = () => {
+        if (!user) {
+            setShowGhostModal(true);
+            return;
+        }
+
         navigator.clipboard.writeText(prompt.prompt);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -94,20 +104,62 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
                     {prompt.title}
                 </h3>
 
-                {/* Image Area */}
+                {/* Image Area with Multi-Image Grid */}
                 <div className="mb-4 border-2 border-brand-black relative group/image bg-gray-200 rounded-none overflow-hidden">
-                    <div className="aspect-video w-full relative">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={prompt.images?.[0] || "/placeholder.jpg"}
-                            alt={prompt.title || "Prompt Image"}
-                            className="object-cover w-full h-full transition-all duration-500 opacity-100 saturate-[1.15] contrast-[1.1] group-hover/image:scale-105 group-hover/image:brightness-110 group-hover/image:saturate-125 group-hover/image:contrast-115"
-                            loading="lazy"
-                            onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.src = "/placeholder.jpg";
-                            }}
-                        />
+                    <div className="aspect-video w-full relative grid gap-0.5 bg-brand-black/10 transition-all duration-300">
+                        {(!prompt.images || prompt.images.length === 0) && (
+                            <img
+                                src="/placeholder.jpg"
+                                alt="Placeholder"
+                                className="object-cover w-full h-full"
+                            />
+                        )}
+
+                        {prompt.images?.slice(0, 4).map((imgUrl, idx, arr) => {
+                            // Grid configuration based on image count
+                            let gridClass = "relative w-full h-full";
+                            const count = arr.length;
+
+                            if (count === 1) {
+                                gridClass = "col-span-2 row-span-2";
+                            } else if (count === 2) {
+                                gridClass = "col-span-1 row-span-2";
+                            } else if (count === 3) {
+                                // First image takes left half, others stack on right
+                                if (idx === 0) gridClass = "col-span-1 row-span-2";
+                                else gridClass = "col-span-1 row-span-1";
+                            } else if (count === 4) {
+                                gridClass = "col-span-1 row-span-1";
+                            }
+
+                            // Layout styling
+                            const isGrid = count > 1;
+
+                            return (
+                                <div key={idx} className={cn("relative overflow-hidden", isGrid ? "grid-image" : "")}
+                                    style={
+                                        count === 2 ? { width: '50%', float: 'left', height: '100%' } :
+                                            count === 3 && idx === 0 ? { width: '50%', float: 'left', height: '100%' } :
+                                                count === 3 ? { width: '50%', float: 'right', height: '50%' } :
+                                                    count === 4 ? { width: '50%', float: 'left', height: '50%' } : {}
+                                    }>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={imgUrl || "/placeholder.jpg"}
+                                        alt={`${prompt.title} - ${idx + 1}`}
+                                        className={cn(
+                                            "object-cover w-full h-full transition-all duration-500 opacity-100 saturate-[1.15] contrast-[1.1]",
+                                            "group-hover/image:scale-105 group-hover/image:brightness-110 group-hover/image:saturate-125 group-hover/image:contrast-115"
+                                        )}
+                                        loading="lazy"
+                                        onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.src = "/placeholder.jpg";
+                                        }}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 
@@ -162,8 +214,12 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
                         <Bookmark className={cn("w-5 h-5", isFavorite && "fill-current")} />
                     </button>
                 </div>
-
             </div>
+
+            <GhostSignupModal
+                isOpen={showGhostModal}
+                onClose={() => setShowGhostModal(false)}
+            />
         </div>
     );
 }

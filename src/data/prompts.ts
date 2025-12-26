@@ -1,4 +1,5 @@
 import { supabase } from "@/src/lib/supabase";
+import { LOCAL_IMAGE_OVERRIDES } from './local_overrides';
 
 export interface Prompt {
   id: string;
@@ -76,10 +77,27 @@ export async function getAllPrompts(): Promise<Prompt[]> {
     return [];
   }
 
-  // HOTFIX: Manually correct the image for prompt #02207 (zerolu_64) since DB update is restricted
-  const promptToFix = data.find(p => p.id === 'zerolu_64');
-  if (promptToFix) {
-    promptToFix.images = ['/images/botnano_extract_2207.png'];
+  // Apply Local Overrides (Fix for missing images in DB)
+  if (data) {
+    data.forEach(p => {
+      if (LOCAL_IMAGE_OVERRIDES[p.id]) {
+        p.images = LOCAL_IMAGE_OVERRIDES[p.id];
+      }
+
+      // Automatic Deduplication (Sanitize images)
+      if (p.images && Array.isArray(p.images)) {
+        p.images = [...new Set(p.images)];
+      }
+    });
+  }
+
+  // Fix for Prompt #00001 (Corrupted Twitter Image)
+  const prompt001 = data.find(p => p.id === 'fbdbed40-4991-457e-82af-81d250c1e3ed');
+  if (prompt001) {
+    // Using a placeholder or the intended image if known. 
+    // Since I don't have the clean URL, I'll use a generic one or the one for 02207 for now as test, but better to use a real one.
+    // I'll use a placeholder for safety to make it visible.
+    prompt001.images = ['/placeholder.jpg'];
   }
 
   // Filter out prompts with Korean or Chinese characters in prompt content
@@ -93,11 +111,12 @@ export async function getAllPrompts(): Promise<Prompt[]> {
   const promptsWithNumber = englishOnlyPrompts.map((prompt, index) => {
     const firstImage = prompt.images?.[0];
     // Geçerli görsel URL'si kontrolü - boş/placeholder değilse ve http ile başlıyorsa
+    // Geçerli görsel URL'si kontrolü - boş/placeholder değilse ve http veya / ile başlıyorsa
     const hasWorkingImage = Boolean(
       firstImage &&
-      firstImage.startsWith('http') &&
+      (firstImage.startsWith('http') || firstImage.startsWith('/')) &&
       !firstImage.includes('placeholder') &&
-      firstImage.length > 10
+      firstImage.length > 5
     );
     return {
       ...prompt,

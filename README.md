@@ -95,20 +95,25 @@ http://localhost:3000
 └── scripts/               # Yardımcı scriptler
 ```
 
-## 📋 Son Güncelleme (25 Aralık 2025)
+## 📋 Son Güncelleme (26 Aralık 2025)
 
-### 🛡️ Güvenlik
+### 🎨 Görsel İyileştirmeler
+- **Multi-Image Grid**: 1-4 görsel desteği (Grid düzeni)
+- **Image Polish**: Artırılmış kontrast ve doygunluk + Hover efektleri
+- **Auto-Sync Sistem**: Yerel görsellerin otomatik DB eşitlenmesi
+- **Eksik Görsel Düzeltmeleri**: Hatalı görsel URL'lerinin otomatik onarımı
+
+### 🛠️ Teknik Düzeltmeler
+- **Auth Fix**: CSP ayarları güncellendi (Google Auth & Supabase)
+- **Auto-Deduplicate**: Çift görsel kayıtlarının otomatik temizlenmesi
+- **Local Overrides**: DB hatası olsa bile yerel görsellerin önceliklendirilmesi
+
+### 🛡️ Güvenlik (25 Aralık)
 - SSRF koruması (URL whitelist)
 - Open Redirect koruması
 - Security headers (CSP, X-Frame-Options)
 - Rate limiting (100 istek/dakika)
 - Middleware ile route protection
-
-### 🎨 UI/UX
-- Hero bölümüne sarı sticky note eklendi
-- Footer'a e-posta adresi eklendi
-- Kopyala butonu düzeltildi
-- Yeni promptlar en üstte görünüyor
 
 ### 🧹 Temizlik
 - ~9MB gereksiz dosya silindi
