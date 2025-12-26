@@ -6,7 +6,7 @@ const jsonPath = path.join(process.cwd(), 'src/data/all_prompts.json');
 const rawData = fs.readFileSync(jsonPath, 'utf8');
 const prompts = JSON.parse(rawData);
 
-const koreanChineseRegex = /[\u3131-\uD79D\u4e00-\u9fff]/;
+const koreanChineseRegex = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff66-\uff9f\u3131-\uD79D]/;
 
 const getPromptFromOriginal = (p) => {
     if (p.prompt_original && typeof p.prompt_original === 'string') {
@@ -47,3 +47,4 @@ const batchData = targetPrompts.map(p => ({
 }));
 
 console.log(JSON.stringify(batchData, null, 2));
+

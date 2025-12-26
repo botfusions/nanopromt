@@ -23,12 +23,16 @@ function updatePromptImage(id, imageUrl) {
         prompts[index].images = [];
     }
 
-    // Add the new image (or replace if desired, but adding is safer)
-    // To match the user's request "add it to the card", we'll put it as the first image
+    // Add the new image
     prompts[index].images.unshift(imageUrl);
 
+    // Update source to BotsNANO for these new AI-enhanced records
+    if (prompts[index].source && prompts[index].source.includes('YouMind')) {
+        prompts[index].source = 'BotsNANO';
+    }
+
     fs.writeFileSync(jsonPath, JSON.stringify(prompts, null, 2), 'utf8');
-    console.log(`✅ successfully updated prompt ${id} with image ${imageUrl}`);
+    console.log(`✅ successfully updated prompt ${id} with image ${imageUrl} and updated source to BotsNANO`);
 }
 
 // Example usage (commented out):
