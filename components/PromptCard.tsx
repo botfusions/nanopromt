@@ -165,8 +165,32 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
 
                 {/* Description / Content */}
                 <div className="mb-6 flex-grow">
-                    <div className="bg-gray-50 border-2 border-brand-black p-3 font-mono text-xs md:text-sm text-gray-600 leading-relaxed h-32 overflow-y-auto custom-scrollbar rounded-none">
-                        {activeTab === 'prompt' ? prompt.prompt : (
+                    <div className="bg-gray-50 border-2 border-brand-black p-3 font-mono text-xs md:text-sm text-gray-600 leading-relaxed h-32 overflow-y-auto custom-scrollbar rounded-none relative">
+                        {activeTab === 'prompt' ? (
+                            user ? (
+                                prompt.prompt
+                            ) : (
+                                <>
+                                    {/* Blurred content for non-users */}
+                                    <div className="blur-[6px] select-none pointer-events-none" aria-hidden="true">
+                                        {prompt.prompt.substring(0, 200)}...
+                                    </div>
+                                    {/* Overlay with login prompt */}
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm">
+                                        <Eye className="w-6 h-6 mb-2 text-gray-400" />
+                                        <p className="text-center text-sm font-bold text-gray-600 mb-2">
+                                            Promptu görmek için giriş yapın
+                                        </p>
+                                        <button
+                                            onClick={() => setShowGhostModal(true)}
+                                            className="px-4 py-1 bg-brand-black text-white text-xs font-bold uppercase hover:bg-brand-yellow hover:text-brand-black transition-colors"
+                                        >
+                                            Giriş Yap
+                                        </button>
+                                    </div>
+                                </>
+                            )
+                        ) : (
                             <div className="flex flex-col items-center justify-center h-full gap-2 text-center">
                                 <p>Orijinal kaynak için butona tıklayın.</p>
                                 <ExternalLink className="w-4 h-4" />
