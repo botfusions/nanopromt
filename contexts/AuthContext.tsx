@@ -95,7 +95,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     };
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        // Get auth instance - may be null if Firebase is not configured
+        const authInstance = auth();
+
+        // If no auth (Firebase not configured), just set loading to false
+        if (!authInstance) {
+            setLoading(false);
+            return;
+        }
+
+        const unsubscribe = onAuthStateChanged(authInstance, async (firebaseUser) => {
             setUser(firebaseUser);
 
             if (firebaseUser) {
@@ -117,3 +126,4 @@ export function AuthProvider({ children }: AuthProviderProps) {
         </AuthContext.Provider>
     );
 }
+
