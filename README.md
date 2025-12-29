@@ -101,9 +101,15 @@ http://localhost:3000
 └── scripts/               # Yardımcı scriptler
 ```
 
-## 📋 Son Güncelleme (28 Aralık 2025)
+## 📋 Son Güncelleme (29 Aralık 2025)
 
-### 🛡️ Güvenlik İyileştirmeleri
+### 🔧 Veri Kalitesi İyileştirmeleri
+- **Duplicate Filtreleme**: Aynı görsellere sahip duplicate kartlar otomatik filtreleniyor
+- **Prompt Override Sistemi**: Veritabanında eksik prompt içerikleri için local override desteği
+- **Görsel Kontrolü**: Bozuk/görselsiz kartlar otomatik tespit ve sıralama
+- **Kart Numaraları**: Tüm kartlarda #XXXXX formatında numara görünümü
+
+### 🛡️ Güvenlik İyileştirmeleri (28 Aralık)
 - **Password Strength**: 8+ karakter, büyük/küçük harf, rakam, özel karakter zorunluluğu
 - **Brute Force Koruması**: 5 başarısız denemede 60sn lockout + timer UI
 - **HSTS Header**: Strict Transport Security eklendi

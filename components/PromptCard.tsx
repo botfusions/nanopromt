@@ -31,7 +31,10 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
     const [showGhostModal, setShowGhostModal] = useState(false);
 
     // Sabit numara - sıralama değişse bile aynı kalır
-    const cardNumber = `#${String(prompt.displayNumber || 0).padStart(5, '0')}`;
+    // Numara yoksa gösterme
+    const cardNumber = prompt.displayNumber
+        ? `#${String(prompt.displayNumber).padStart(5, '0')}`
+        : null;
 
 
     const handleCopy = () => {
@@ -89,7 +92,9 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
                 {/* Author Info */}
                 <div className="flex items-center justify-between mb-4 border-b-2 border-gray-100 pb-2">
                     <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs bg-gray-100 border border-gray-300 px-2 py-0.5 text-gray-600">{cardNumber}</span>
+                        {cardNumber && (
+                            <span className="font-mono text-xs bg-gray-100 border border-gray-300 px-2 py-0.5 text-gray-600">{cardNumber}</span>
+                        )}
                         <span className="font-black uppercase text-xs tracking-wide text-gray-500">
                             <span className="text-brand-black border-b-2 border-brand-yellow hover:bg-brand-yellow transition-colors cursor-pointer">@{prompt.author}</span>
                         </span>
@@ -106,7 +111,7 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
 
                 {/* Image Area with Multi-Image Grid */}
                 <div className="mb-4 border-2 border-brand-black relative group/image bg-gray-200 rounded-none overflow-hidden">
-                    <div className="aspect-video w-full relative grid gap-0.5 bg-brand-black/10 transition-all duration-300">
+                    <div className="aspect-video w-full relative flex flex-wrap bg-brand-black/10 transition-all duration-300">
                         {(!prompt.images || prompt.images.length === 0) && (
                             <img
                                 src="/placeholder.jpg"
@@ -116,33 +121,20 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
                         )}
 
                         {prompt.images?.slice(0, 4).map((imgUrl, idx, arr) => {
-                            // Grid configuration based on image count
-                            let gridClass = "relative w-full h-full";
                             const count = arr.length;
 
-                            if (count === 1) {
-                                gridClass = "col-span-2 row-span-2";
-                            } else if (count === 2) {
-                                gridClass = "col-span-1 row-span-2";
+                            // Flexbox ile yan yana gösterim için genişlik hesaplama
+                            let widthClass = "w-full h-full";
+                            if (count === 2) {
+                                widthClass = "w-1/2 h-full"; // Yan yana
                             } else if (count === 3) {
-                                // First image takes left half, others stack on right
-                                if (idx === 0) gridClass = "col-span-1 row-span-2";
-                                else gridClass = "col-span-1 row-span-1";
+                                widthClass = idx === 0 ? "w-1/2 h-full" : "w-1/2 h-1/2";
                             } else if (count === 4) {
-                                gridClass = "col-span-1 row-span-1";
+                                widthClass = "w-1/2 h-1/2"; // 2x2 grid
                             }
 
-                            // Layout styling
-                            const isGrid = count > 1;
-
                             return (
-                                <div key={idx} className={cn("relative overflow-hidden", isGrid ? "grid-image" : "")}
-                                    style={
-                                        count === 2 ? { width: '50%', float: 'left', height: '100%' } :
-                                            count === 3 && idx === 0 ? { width: '50%', float: 'left', height: '100%' } :
-                                                count === 3 ? { width: '50%', float: 'right', height: '50%' } :
-                                                    count === 4 ? { width: '50%', float: 'left', height: '50%' } : {}
-                                    }>
+                                <div key={idx} className={cn("relative overflow-hidden", widthClass)}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                         src={imgUrl || "/placeholder.jpg"}

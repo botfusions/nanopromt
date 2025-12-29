@@ -112,5 +112,20 @@ export const LOCAL_IMAGE_OVERRIDES: Record<string, string[]> = {
   ],
   "youmind_v2_591": [
     "/images/botnano_extract_2207.png"
+  ],
+  // #02953 - Athletic Runner - 2 images
+  "02953": [
+    "https://pbs.twimg.com/media/G853Mz4bEAANDNB?format=jpg&name=small",
+    "https://pbs.twimg.com/media/G853MzvagAECxtt?format=jpg&name=small"
+  ],
+  // Virgül sorunu düzeltmesi - Nano Banana Pro on Gemini
+  "fbdbed40-4991-457e-82af-81d250c1e3ed": [
+    "https://pbs.twimg.com/media/G9GOHdRbkAATPj_?format=jpg&name=360x360",
+    "https://pbs.twimg.com/media/G9GOHcuagAEA2Kt?format=jpg&name=360x360"
   ]
+};
+
+// Prompt content overrides - veritabanında boş olan promptlar için
+export const LOCAL_PROMPT_OVERRIDES: Record<string, string> = {
+  "02953": `A side-profile shot of an athletic Black male runner mid-stride against a pale peach background. The runner wears a vivid orange athletic top and matching orange running shorts with neon lime green scribbles outlined around his form to emphasize motion and energy. The composition has a retro sports zine feel, with overlaid text elements in bold sans-serif fonts — "SPORTS" at the top in white with shadow, and layered grainy textures. Include torn paper edges, stamp-like marks, and hand-drawn arrows. Modern sports zine aesthetic.`
 };

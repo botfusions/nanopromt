@@ -1,5 +1,5 @@
 import { supabase } from "@/src/lib/supabase";
-import { LOCAL_IMAGE_OVERRIDES } from './local_overrides';
+import { LOCAL_IMAGE_OVERRIDES, LOCAL_PROMPT_OVERRIDES } from './local_overrides';
 
 export interface Prompt {
   id: string;
@@ -77,11 +77,17 @@ export async function getAllPrompts(): Promise<Prompt[]> {
     return [];
   }
 
-  // Apply Local Overrides (Fix for missing images in DB)
+  // Apply Local Overrides (Fix for missing images and prompts in DB)
   if (data) {
     data.forEach(p => {
+      // Image overrides
       if (LOCAL_IMAGE_OVERRIDES[p.id]) {
         p.images = LOCAL_IMAGE_OVERRIDES[p.id];
+      }
+
+      // Prompt overrides - veritabanında boş/placeholder promptlar için
+      if (LOCAL_PROMPT_OVERRIDES[p.id]) {
+        p.prompt = LOCAL_PROMPT_OVERRIDES[p.id];
       }
 
       // Automatic Deduplication (Sanitize images)
@@ -91,61 +97,104 @@ export async function getAllPrompts(): Promise<Prompt[]> {
     });
   }
 
-  // Fix for Prompt #00001 (Corrupted Twitter Image)
-  const prompt001 = data.find(p => p.id === 'fbdbed40-4991-457e-82af-81d250c1e3ed');
-  if (prompt001) {
-    // Using a placeholder or the intended image if known. 
-    // Since I don't have the clean URL, I'll use a generic one or the one for 02207 for now as test, but better to use a real one.
-    // I'll use a placeholder for safety to make it visible.
-    prompt001.images = ['/placeholder.jpg'];
-  }
+  // Silinecek kartların ID'leri (duplicate ve sorunlu kartlar)
+  const EXCLUDED_IDS = [
+    'fbdbed40-4991-457e-82af-81d250c1e3ed', // 02953 ile aynı resimlere sahip duplicate
+  ];
+
+  // Sorunlu kartları filtrele
+  const filteredData = (data as Prompt[]).filter(prompt => {
+    // Excluded ID'leri çıkar
+    if (EXCLUDED_IDS.includes(prompt.id)) return false;
+
+    // "Construction of the Impossible" başlıklı kartları çıkar
+    if (prompt.title?.toLowerCase().includes('construction of the impossible')) return false;
+
+    // "Nano Banana Pro" başlıklı kartları çıkar (02953 ile duplicate)
+    if (prompt.title?.toLowerCase().includes('nano banana pro')) return false;
+
+    return true;
+  });
 
   // Filter out prompts with Korean or Chinese characters in prompt content
   const koreanChineseRegex = /[\u3131-\uD79D\u4e00-\u9fff]/;
-  const englishOnlyPrompts = (data as Prompt[]).filter(prompt => {
+  const englishOnlyPrompts = filteredData.filter(prompt => {
     return !koreanChineseRegex.test(prompt.prompt || '');
   });
 
-  // Önce tüm promptlara sabit numara ata (orijinal DB sırasına göre)
+  // Önce tüm promptlara sabit numara ata (veritabanındaki değer veya ID'den çıkar)
   // Bu numara asla değişmez - arama için kullanılır
+  let sequentialNumber = 1; // UUID'li kartlar için sıralı numara
+
   const promptsWithNumber = englishOnlyPrompts.map((prompt, index) => {
     const firstImage = prompt.images?.[0];
-    // Geçerli görsel URL'si kontrolü - boş/placeholder değilse ve http ile başlıyorsa
-    // Geçerli görsel URL'si kontrolü - boş/placeholder değilse ve http veya / ile başlıyorsa
-    const hasWorkingImage = Boolean(
-      firstImage &&
-      (firstImage.startsWith('http') || firstImage.startsWith('/')) &&
-      !firstImage.includes('placeholder') &&
-      firstImage.length > 5
-    );
+
+    // Geçerli görsel URL'si kontrolü - gerçekten çalışan görsel URL'leri için
+    // Sorunlu URL'ler: boş, null, placeholder, "alt text" içeren, uzantısız
+    const isValidImageUrl = (url: string | undefined | null): boolean => {
+      if (!url || typeof url !== 'string') return false;
+      if (url.length < 10) return false;
+      if (url.includes('placeholder')) return false;
+
+      // HTTP veya local images ile başlamalı
+      if (!url.startsWith('http') && !url.startsWith('/images/')) return false;
+
+      // Görsel uzantısı veya Twitter format içermeli
+      const hasImageFormat =
+        url.includes('.jpg') ||
+        url.includes('.jpeg') ||
+        url.includes('.png') ||
+        url.includes('.webp') ||
+        url.includes('.gif') ||
+        url.includes('format=jpg') ||
+        url.includes('twimg.com');
+
+      return hasImageFormat;
+    };
+
+    const hasWorkingImage = isValidImageUrl(firstImage);
+
+    // displayNumber belirleme sırası:
+    // 1. Veritabanındaki display_number varsa kullan
+    // 2. ID sadece rakamlardan oluşuyorsa (örn: "02953") ID'yi numara olarak kullan
+    // 3. UUID formatındaysa sıralı numara ata
+    let displayNum = (prompt as any).display_number || (prompt as any).displayNumber;
+    if (!displayNum && prompt.id) {
+      // ID sadece rakamlardan oluşuyorsa (örn: "02953", "00001")
+      if (/^\d+$/.test(prompt.id)) {
+        displayNum = parseInt(prompt.id, 10);
+      } else {
+        // UUID veya diğer formatlar için sıralı numara ata
+        displayNum = sequentialNumber++;
+      }
+    }
+
     return {
       ...prompt,
       hasWorkingImage,
-      displayNumber: index + 1 // Sabit numara - DB sırasına göre
+      displayNumber: displayNum
     };
   });
 
-  // Sıralama: En yeni en üstte, sonra resim kalitesine göre
-  // 1. Önce tarihe göre sırala (en yeni en üstte)
-  // 2. Aynı gündeki promptlar için: Resim + Prompt > Resim + Başlık > Resimsiz
+  // Sıralama: Önce görselli kartlar, sonra görselsiz kartlar
+  // Görselsizler en sona gider ve author "BotsNANO" olur
   promptsWithNumber.sort((a, b) => {
-    // Önce tarihe göre sırala (en yeni en üstte)
+    // Öncelikle: Görselli kartlar her zaman görselsizlerden önce
+    if (a.hasWorkingImage && !b.hasWorkingImage) return -1;
+    if (!a.hasWorkingImage && b.hasWorkingImage) return 1;
+
+    // Her iki kart da aynı kategorideyse (ikisi de görselli veya görselsiz):
+    // Tarihe göre sırala (en yeni en üstte)
     const dateA = new Date(a.date || '1970-01-01').getTime();
     const dateB = new Date(b.date || '1970-01-01').getTime();
+    return dateB - dateA; // En yeni en üstte
+  });
 
-    // Tarih farkı 1 günden fazlaysa tarihe göre sırala
-    const oneDayMs = 24 * 60 * 60 * 1000;
-    if (Math.abs(dateA - dateB) > oneDayMs) {
-      return dateB - dateA; // En yeni en üstte
+  // Görselsiz kartlara BotsNANO etiketi ata
+  promptsWithNumber.forEach(p => {
+    if (!p.hasWorkingImage) {
+      p.author = 'BotsNANO';
     }
-
-    // Aynı gün içindeyse resim kalitesine göre sırala
-    const getCategory = (p: typeof a) => {
-      if (p.hasWorkingImage && p.prompt && p.prompt !== p.title) return 1; // Resim + Gerçek Prompt
-      if (p.hasWorkingImage) return 2; // Resim + Başlık
-      return 3; // Resimsiz
-    };
-    return getCategory(a) - getCategory(b);
   });
 
   return promptsWithNumber;
