@@ -90,6 +90,11 @@ export async function getAllPrompts(): Promise<Prompt[]> {
         p.prompt = LOCAL_PROMPT_OVERRIDES[p.id];
       }
 
+      // created_at değerini date olarak kullan (saat bilgisi için)
+      if (p.created_at) {
+        p.date = p.created_at;
+      }
+
       // "Test Kuşlar" başlıklı promptu düzelt
       if (p.title === 'Test Kuşlar') {
         p.title = 'Nano Banana Pro prompt';
