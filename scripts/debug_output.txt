@@ -1,0 +1,21 @@
+=== #02964 Debug ===
+
+Kayıt bulundu:
+  ID: 2d20bc3b-1ab5-46c3-85f5-20c842b37b55
+  Title: Gemini Nano Banana Pro
+  Prompt: {
+  "subject": {
+    "gender": "female",
+    "appearance": {
+      "skin_tone": "bronzed/tanned",
+  
+  Images: ["https://pbs.twimg.com/media/G9VdFaqbsAAdSwp?format=jpg&name=medium"]
+  Author: xIrissy
+  Source: migration
+  Featured: false
+  Display Number: 2964
+  Created At: 2025-12-29T22:18:21.917897+03:00
+
+  Korece/Çince var mı? Hayır
+  Kötü başlık mı? EVET - FİLTRELENECEK!
+  Geçerli görsel var mı? Evet

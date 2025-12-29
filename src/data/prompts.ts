@@ -131,9 +131,6 @@ ONE image, 4:5, "artistic process" aesthetic. </instruction>`;
     // "Construction of the Impossible" başlıklı kartları çıkar
     if (prompt.title?.toLowerCase().includes('construction of the impossible')) return false;
 
-    // "Nano Banana Pro" başlıklı kartları çıkar (02953 ile duplicate)
-    if (prompt.title?.toLowerCase().includes('nano banana pro')) return false;
-
     return true;
   });
 
