@@ -131,7 +131,19 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
 
                 {/* Image Area with Multi-Image Grid */}
                 <div className="mb-4 border-2 border-brand-black relative group/image bg-gray-200 rounded-none overflow-hidden">
-                    <div className="aspect-video w-full relative flex flex-wrap bg-brand-black/10 transition-all duration-300">
+                    <div className={cn(
+                        "aspect-video w-full relative bg-brand-black/10 transition-all duration-300",
+                        // Tüm çoklu resimler için grid layout kullan
+                        prompt.images?.length === 1
+                            ? "flex"
+                            : prompt.images?.length === 2
+                                ? "grid grid-cols-2"
+                                : prompt.images?.length === 3
+                                    ? "grid grid-cols-2 grid-rows-2"
+                                    : prompt.images?.length === 4
+                                        ? "grid grid-cols-2 grid-rows-2"
+                                        : "flex"
+                    )}>
                         {(!prompt.images || prompt.images.length === 0) && (
                             <img
                                 src="/placeholder.jpg"
@@ -143,18 +155,34 @@ export function PromptCard({ prompt, isFavorite, onToggleFavorite }: PromptCardP
                         {prompt.images?.slice(0, 4).map((imgUrl, idx, arr) => {
                             const count = arr.length;
 
-                            // Flexbox ile yan yana gösterim için genişlik hesaplama
-                            let widthClass = "w-full h-full";
-                            if (count === 2) {
-                                widthClass = "w-1/2 h-full"; // Yan yana
+                            // Layout sınıfları - tüm çoklu resimler için grid kullan
+                            let layoutClass = "";
+
+                            if (count === 1) {
+                                // 1 resim: tam genişlik
+                                layoutClass = "w-full h-full";
+                            } else if (count === 2) {
+                                // 2 resim: yan yana (grid ile otomatik)
+                                layoutClass = "";
                             } else if (count === 3) {
-                                widthClass = idx === 0 ? "w-1/2 h-full" : "w-1/2 h-1/2";
+                                // 3 resim: 1 büyük sol (tam yükseklik), 2 küçük sağda üst üste
+                                if (idx === 0) {
+                                    // Büyük resim - sol sütun, her iki satırı kaplar
+                                    layoutClass = "col-start-1 row-start-1 row-span-2";
+                                } else if (idx === 1) {
+                                    // Sağ üst resim
+                                    layoutClass = "col-start-2 row-start-1";
+                                } else {
+                                    // Sağ alt resim
+                                    layoutClass = "col-start-2 row-start-2";
+                                }
                             } else if (count === 4) {
-                                widthClass = "w-1/2 h-1/2"; // 2x2 grid
+                                // 4 resim: 2x2 grid - grid ile otomatik sıralama
+                                layoutClass = "";
                             }
 
                             return (
-                                <div key={idx} className={cn("relative overflow-hidden", widthClass)}>
+                                <div key={idx} className={cn("relative overflow-hidden", layoutClass)}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                         src={imgUrl || "/placeholder.jpg"}

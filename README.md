@@ -6,7 +6,7 @@
 
 **Gemini Nano Banana Pro için en iyi prompt koleksiyonu**
 
-[![Prompts](https://img.shields.io/badge/Prompts-2957+-brightgreen?style=flat-square)](/)
+[![Prompts](https://img.shields.io/badge/Prompts-2971+-brightgreen?style=flat-square)](/)
 [![Next.js](https://img.shields.io/badge/Next.js-16+-black?style=flat-square)](https://nextjs.org)
 [![Tailwind](https://img.shields.io/badge/Tailwind-CSS-38bdf8?style=flat-square)](https://tailwindcss.com)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-3ecf8e?style=flat-square)](https://supabase.com)
@@ -101,12 +101,25 @@ http://localhost:3000
 └── scripts/               # Yardımcı scriptler
 ```
 
-## 📋 Son Güncelleme (29 Aralık 2025)
+## 📋 Son Güncelleme (31 Aralık 2025)
+
+### 🖼️ Çoklu Resim Layout İyileştirmesi
+- **3 Resim Kuralı**: 1 büyük sol (tam yükseklik) + 2 küçük sağ (üst üste)
+- **4 Resim Grid**: 2x2 düzgün grid layout
+- **CSS Grid Geçişi**: Tüm çoklu resimler için daha stabil grid layout
+- **Bozuk URL Düzeltmesi**: Eksik format parametreli Twitter resim URL'leri düzeltildi
+
+### 👻 Ghost Signup Modal
+- **Giriş Yapmamış Kullanıcılar**: Prompt kopyalama veya görüntüleme girişiminde kayıt modal'ı
+- **Blur Overlay**: Prompt içerikleri giriş yapılana kadar bulanık gösteriliyor
+- **Firebase Auth**: IndexedDB tabanlı oturum yönetimi
+
+## 📋 Önceki Güncelleme (29 Aralık 2025)
 
 ### 🔢 Kalıcı Kayıt Numaraları
 - **display_number Sütunu**: Supabase'de kalıcı kayıt numarası sistemi
 - **Otomatik Numara Atama**: Yeni promptlar otomatik sıradaki numarayı alıyor
-- **2957 Prompt**: Tüm mevcut promptlara sıralı numara atandı (#00001 → #02957)
+- **2971+ Prompt**: Tüm mevcut promptlara sıralı numara atandı
 
 ### 🔧 Veri Kalitesi İyileştirmeleri
 - **Duplicate Filtreleme**: Aynı görsellere sahip duplicate kartlar otomatik filtreleniyor
